@@ -1,4 +1,4 @@
-# Phase 1: Project setup (Steps 1–2)
+# Phase 1: Project setup 
 
 ## Locations
 | What | Path |
@@ -21,8 +21,6 @@ source scripts/env.sh
 ```
 
 ## Step 1: Repository
-- Quartz already connected to GitHub (existing SSH key "IU HPC Quartz")
-- Git identity: Sanyukta Chapagain / sanyuktachapagain241@gmail.com
 - Created repo validate-ngs; created in home, then moved to scratch
 
 ## Step 2: Environment
@@ -47,5 +45,5 @@ source scripts/env.sh
   they come as containers per nf-core module (Phase 3)
 - Tested on compute node: `nextflow run nextflow-io/hello` worked; Apptainer pulled an Ubuntu image
 
-## Next
-Step 3: cluster configuration (conf/slurm.config)
+## Cluster Config
+
