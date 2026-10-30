@@ -1,6 +1,3 @@
 # Step 1: Create the repository
-Did:
-Where:
-Created:
-Next:
-Notes:
+Main working directory : cd /N/scratch/schapag/validate-ngs
+
