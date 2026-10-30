@@ -1,20 +1,51 @@
-# Step 1: Create the repository
-Main working directory : cd /N/scratch/schapag/validate-ngs
+# Phase 1: Project setup (Steps 1–2)
 
-HPC -A : r01340
+## Locations
+| What | Path |
+|---|---|
+| Repo (code, in git) | /N/scratch/schapag/validate-ngs |
+| Big files (not in git) | /N/scratch/schapag/validate-ngs-data (linked as `data/` in repo) |
+| Conda environment | /N/scratch/schapag/validate-ngs-data/conda/envs/validate-ngs |
+| Container cache | /N/scratch/schapag/validate-ngs-data/apptainer_cache |
+| Nextflow home | /N/scratch/schapag/validate-ngs-data/nxf_home |
 
+Slurm account: `r01340`
+Partitions: general (4 d), interactive (8 h), debug (1 h); GPU: v100, h100-* (for DeepVariant)
 
-Tool	
-Nextflow:	26.04.6, installed in ~/.local/bin
-Apptainer	1.3.6, from the system (/N/soft)
-Java	21.0.8 (Nextflow needs 17 or newer,) - update
-conda	available (system install 26.3.2)
-nf-core 4.1.0
-nf-test 0.9.5
+## Start of every session
+```bash
+srun -p interactive -A r01340 --cpus-per-task=4 --mem=16G --time=04:00:00 --pty bash
+cd /N/scratch/schapag/validate-ngs
+git pull
+source scripts/env.sh
+```
 
-#
-Create envionment on mkdir -p /N/scratch/schapag/validate-ngs-data/conda/envs /N/scratch/schapag/validate-ngs-data/conda/pkgs  and install necessary packages
-Downloaded the packages and modules required in nfcore with their versions
-[Write only if needed impt packages and their versions ] 
+## Step 1: Repository
+- Quartz already connected to GitHub (existing SSH key "IU HPC Quartz")
+- Git identity: Sanyukta Chapagain / sanyuktachapagain241@gmail.com
+- Created repo validate-ngs; created in home, then moved to scratch
 
-Next we also created an environment.yml  to reproduce the exact environment
+## Step 2: Environment
+- New conda env on scratch, from conda-forge + bioconda (latest releases)
+- `scripts/env.sh` activates the env and sends all Nextflow/Apptainer caches to scratch
+  (overrides older settings in ~/.bashrc)
+- `envs/validate-ngs.yml` rebuilds the env:
+  `conda env create -p <path> -f envs/validate-ngs.yml`
+
+| Tool | Version | Source |
+|---|---|---|
+| Nextflow | 26.10.4 | conda env |
+| nf-core tools | 4.2.1 | conda env |
+| nf-test | 0.9.5 | conda env |
+| samtools / bcftools | 1.25 | conda env |
+| bedtools | 2.31.1 | conda env |
+| sra-tools | 3.4.1 | conda env |
+| Apptainer | 1.3.6 | system |
+| Java | 21.0.8 | system |
+
+- Pipeline tools (BWA-MEM2, GATK, DeepVariant, fgbio, etc.) are not installed with conda;
+  they come as containers per nf-core module (Phase 3)
+- Tested on compute node: `nextflow run nextflow-io/hello` worked; Apptainer pulled an Ubuntu image
+
+## Next
+Step 3: cluster configuration (conf/slurm.config)
